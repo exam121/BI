@@ -1,0 +1,99 @@
+Create database Sales_DW
+-----------------------------------------------------
+
+Use Sales_DW
+-----------------------------------------------------
+
+Create table DimCustomer
+( CustomerID int primary key identity,
+CustomerAltID varchar(10) not null,
+CustomerName varchar(50),
+Gender varchar(20)
+)
+
+
+Insert into DimCustomer
+(CustomerAltID,CustomerName,Gender)values
+('IMI-101','Aarav Mehta','M'),
+('IMI-102','Kiara Sharma','F'),
+('IMI-103','Rohan Desai','M'),
+('IMI-104','Ananya Patel','F'),
+('IMI-105','Vivaan Kapoor','M'),
+('IMI-106','Sara Khan','F')
+
+
+CREATE TABLE Product(
+[Product ID] INT NOT NULL PRIMARY KEY,
+[Product Name] NVARCHAR(50) NOT NULL,
+[Product Price] float NOT NULL,
+[Category Name] NVARCHAR(50) NOT NULL,
+Class NVARCHAR(50) NOT NULL,
+[Modify Date] datetime2(7) NOT NULL,
+[Vitality Date] NVARCHAR(50) NOT NULL
+);
+
+Insert into Product([Product ID],[Product Name],[Product Price],[Category Name],Class,[Modify Date],[Vitality Date])values 
+(201,'Tablet',45000.00,'Electronic','Premium','2026-03-10 09:30:00.0000000','2 years'),
+(202,'Printer',15000.00,'Electronic','Economy','2026-03-12 11:00:00.0000000','1 years'),
+(203,'Sofa',35000.00,'Furniture','Premium','2026-03-14 14:20:00.0000000','5 years'),
+(204,'Watch',8000.00,'Accessories','Premium','2026-03-15 10:15:00.0000000','2 years'),
+(205,'Headphones',5000.00,'Electronic','Economy','2026-03-18 16:45:00.0000000','1 years'),
+(206,'Office Desk',12000.00,'Furniture','Economy','2026-03-20 13:30:00.0000000','3 years')
+
+
+
+/* FIXED Transaction Date Table */
+CREATE TABLE TransactionDate
+(
+TransactionDate DATETIME2(7) PRIMARY KEY,
+TransactionDay INT NOT NULL,
+TransactionMonth INT NOT NULL,
+TransactionYear INT NOT NULL
+);
+
+
+INSERT INTO TransactionDate
+VALUES
+('2026-03-01', 1, 3, 2026),
+('2026-03-02', 2, 3, 2026),
+('2026-03-03', 3, 3, 2026),
+('2026-03-04', 4, 3, 2026),
+('2026-03-05', 5, 3, 2026),
+('2026-03-06', 6, 3, 2026);
+
+
+
+/* FIXED Transaction Fact Table */
+CREATE TABLE TransactionFact
+(
+TransactionNumber NVARCHAR(50) PRIMARY KEY,
+EmployeeID INT NOT NULL,
+ProductID INT NOT NULL,
+CustomerID INT NOT NULL,
+TransactionDate DATETIME2(7) NOT NULL,
+QuantitySold INT NOT NULL,
+TotalPrice DECIMAL(10,2) NOT NULL,
+Discount DECIMAL(10,2) NOT NULL,
+
+FOREIGN KEY (ProductID) REFERENCES Product([Product ID]),
+FOREIGN KEY (CustomerID) REFERENCES DimCustomer(CustomerID),
+FOREIGN KEY (TransactionDate) REFERENCES TransactionDate(TransactionDate)
+);
+
+
+
+INSERT INTO TransactionFact
+VALUES
+('TR001', 301, 201, 1, '2026-03-01', 1, 45000, 500),
+('TR002', 302, 202, 2, '2026-03-02', 2, 30000, 1000),
+('TR003', 303, 203, 3, '2026-03-03', 1, 35000, 1500),
+('TR004', 304, 204, 4, '2026-03-04', 2, 16000, 800),
+('TR005', 305, 205, 5, '2026-03-05', 3, 15000, 700),
+('TR006', 306, 206, 6, '2026-03-06', 1, 12000, 600);
+
+-----------------------------------------------------
+
+SELECT * FROM DimCustomer;
+SELECT * FROM Product;
+SELECT * FROM TransactionDate;
+SELECT * FROM TransactionFact;
